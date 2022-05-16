@@ -25,6 +25,24 @@ def concat_text(old_dir_prefix, new_dir_prefix):
                     writer.writerow(new_row)
 
 
+def process_20news():
+    train_path = os.path.join(PATH_ROOT, "TwentyNews", "train.csv")
+    test_path = os.path.join(PATH_ROOT, "TwentyNews", "test.csv")
+
+    for path in (train_path, test_path):
+        print(path, "")
+        with open(path, "r") as f:
+            reader = csv.reader(f)
+            idx = 0
+            for row in reader:
+                count = 0
+                for c in row[1]:
+                    if c == '\n':
+                        count += 1
+                print(f"Found {count} newlines in row {idx}")
+                idx += 1
+
+
 def process_ag_news():
     path_prefix = os.path.join(PATH_ROOT, "AG_NEWS")
     concat_text(path_prefix, path_prefix)
@@ -70,9 +88,10 @@ def process_yelp_review_polarity():
 
 
 if __name__ == "__main__":
-    process_ag_news()
-    process_imdb()
-    process_dbpedia()
-    process_sogou_news()
-    process_yahoo_answers()
-    process_yelp_review_polarity()
+    # process_ag_news()
+    # process_imdb()
+    # process_dbpedia()
+    # process_sogou_news()
+    # process_yahoo_answers()
+    # process_yelp_review_polarity()
+    process_20news()
