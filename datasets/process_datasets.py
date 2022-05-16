@@ -29,18 +29,29 @@ def process_20news():
     train_path = os.path.join(PATH_ROOT, "TwentyNews", "train.csv")
     test_path = os.path.join(PATH_ROOT, "TwentyNews", "test.csv")
 
-    for path in (train_path, test_path):
+    train_path_temp = os.path.join(PATH_ROOT, "TwentyNews", "train_temp.csv")
+    test_path_temp = os.path.join(PATH_ROOT, "TwentyNews", "test_temp.csv")
+
+    os.rename(train_path, train_path_temp)
+    os.rename(test_path, test_path_temp)
+    for path, temp_path in [(train_path, train_path_temp), (test_path, test_path_temp)]:
         print(path, "")
-        with open(path, "r") as f:
+        with open(temp_path, "r") as f:
             reader = csv.reader(f)
-            idx = 0
-            for row in reader:
-                count = 0
-                for c in row[1]:
-                    if c == '\n':
-                        count += 1
-                print(f"Found {count} newlines in row {idx}")
-                idx += 1
+            with open(path, "w+") as f_out:
+                writer = csv.writer(f_out)
+                idx = 0
+                for row in reader:
+                    count = 0
+                    for c in row[1]:
+                        if c == '\n':
+                            count += 1
+                    print(f"Found {count} newlines in row {idx}")
+                    idx += 1
+                    text = row[1]
+                    text = text.replace('\n', " ")
+                    new_row = [row[0], text]
+                    writer.writerow(new_row)
 
 
 def process_ag_news():
