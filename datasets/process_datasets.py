@@ -71,9 +71,9 @@ def add_missing_quotes(dataset):
                 line = lines[i]
                 prefix = line.split(",")[0]
                 if line[len(prefix) + 1] != '"':
-                    lines[i] = prefix + ',"' + line[len(prefix) + 1:] + '"'
-                if line.strip()[-1] != '"':
-                    lines[i] = lines[i] + '"'
+                    lines[i] = prefix + ",\"" + line[len(prefix) + 1:] + "\""
+                if lines[i].strip()[-1] != '"':
+                    lines[i] = lines[i] + "\""
             with open(path, "w+") as f_out:
                 f_out.writelines(lines)
 
