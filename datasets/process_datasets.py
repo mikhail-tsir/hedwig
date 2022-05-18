@@ -130,4 +130,4 @@ if __name__ == "__main__":
     # process_yahoo_answers()
     # process_yelp_review_polarity()
     process_20news()
-    add_missing_quotes("20News")
+    add_missing_quotes("TwentyNews")
