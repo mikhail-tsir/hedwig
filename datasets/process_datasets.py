@@ -54,6 +54,28 @@ def process_20news():
                     writer.writerow(new_row)
 
 
+def add_missing_quotes(dataset):
+    train_path = os.path.join(PATH_ROOT, dataset, "train.csv")
+    test_path = os.path.join(PATH_ROOT, dataset, "test.csv")
+
+    train_path_temp = os.path.join(PATH_ROOT, dataset, "train_temp.csv")
+    test_path_temp = os.path.join(PATH_ROOT, dataset, "test_temp.csv")
+
+    os.rename(train_path, train_path_temp)
+    os.rename(test_path, test_path_temp)
+
+    for path, temp_path in [(train_path, train_path_temp), (test_path, test_path_temp)]:
+        with open(temp_path, "r") as f_in:
+            lines = f_in.readlines()
+            for i in range(len(lines)):
+                line = lines[i]
+                prefix = line.split(",")[0]
+                if line[len(prefix) + 1] != '"':
+                    lines[i] = prefix + ',"' + line[len(prefix) + 1:] + '"'
+            with open(path, "w+") as f_out:
+                f_out.writelines(lines)
+
+
 def process_ag_news():
     path_prefix = os.path.join(PATH_ROOT, "AG_NEWS")
     concat_text(path_prefix, path_prefix)
@@ -106,3 +128,4 @@ if __name__ == "__main__":
     # process_yahoo_answers()
     # process_yelp_review_polarity()
     process_20news()
+    add_missing_quotes("20News")
