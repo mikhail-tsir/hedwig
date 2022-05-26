@@ -16,3 +16,5 @@ kim_cnn/data
 !.local_data/.gitkeep
 *.onnx
 .local_data/
+job_output/
+job_scripts/
