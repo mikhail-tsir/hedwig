@@ -111,12 +111,16 @@ if __name__ == '__main__':
 
     else:
         dataset_class = dataset_map[args.dataset]
+        shot = args.shot
+        shot_group = args.shot_group
         iters = dataset_class.iters(args.data_dir,
                                     args.word_vectors_file,
                                     args.word_vectors_dir,
                                     batch_size=args.batch_size,
                                     device=args.gpu,
-                                    unk_init=UnknownWordVecCache.unk)
+                                    unk_init=UnknownWordVecCache.unk,
+                                    shot=shot if shot else None,
+                                    shot_group=shot_group if shot_group else None)
 
         # Some datasets (e.g. AG_NEWS) only have train and test splits
         if len(iters) == 2:

@@ -23,6 +23,8 @@ def get_args():
     parser.add_argument('--save-path', type=str, default=os.path.join('model_checkpoints', 'char_cnn'))
     parser.add_argument('--resume-snapshot', type=str)
     parser.add_argument('--trained-model', type=str)
+    parser.add_argument('--shot', type=str, default="", choices=['5shot', '10shot', '50shot', '100shot'], dest='shot')
+    parser.add_argument('--shot_group', type=int, default=0, dest='shot_group')
 
     args = parser.parse_args()
     return args

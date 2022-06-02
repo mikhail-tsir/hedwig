@@ -24,13 +24,15 @@ class DBpedia(TabularDataset):
     @classmethod
     def splits(cls, path, train=os.path.join('.local_data', 'DBpedia', 'train.csv'),
                test=os.path.join('.local_data', 'DBpedia', 'test.csv'), **kwargs):
+        if 'shot' in kwargs and 'shot_group' in kwargs:
+            train = os.path.join('.local_data', 'DBpedia', kwargs['shot'], str(kwargs['shot_group']), 'train.csv')
         return super(DBpedia, cls).splits(
             path, train=train, test=test, format='csv', fields=[('label', cls.LABEL_FIELD), ('text', cls.TEXT_FIELD)]
         )
 
     @classmethod
     def iters(cls, path, vectors_name, vectors_cache, batch_size=64, shuffle=True, device=0, vectors=None,
-              unk_init=torch.Tensor.zero_):
+              unk_init=torch.Tensor.zero_, shot=None, shot_group=None):
         """
         :param path: directory containing train, test, dev files
         :param vectors_name: name of word vectors file
@@ -44,7 +46,7 @@ class DBpedia(TabularDataset):
         if vectors is None:
             vectors = Vectors(name=vectors_name, cache=vectors_cache, unk_init=unk_init)
 
-        train, test = cls.splits(path)
+        train, test = cls.splits(path, shot=shot, shot_group=shot_group)
         cls.TEXT_FIELD.build_vocab(train, test, vectors=vectors)
         return BucketIterator.splits((train, test), batch_size=batch_size, repeat=False, shuffle=shuffle,
                                      sort_within_batch=True, device=device)
@@ -56,14 +58,14 @@ class DBpediaCharQuantized(DBpedia):
 
     @classmethod
     def iters(cls, path, vectors_name, vectors_cache, batch_size=64, shuffle=True, device=0, vectors=None,
-              unk_init=torch.Tensor.zero_):
+              unk_init=torch.Tensor.zero_, shot=None, shot_group=None):
         """
         :param path: directory containing train, test, dev files
         :param batch_size: batch size
         :param device: GPU device
         :return:
         """
-        train, test = cls.splits(path)
+        train, test = cls.splits(path, shot=shot, shot_group=shot_group)
         return BucketIterator.splits((train, test), batch_size=batch_size, repeat=False, shuffle=shuffle, device=device)
 
 
