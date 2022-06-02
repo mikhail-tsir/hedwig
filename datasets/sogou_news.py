@@ -30,7 +30,7 @@ class SogouNews(TabularDataset):
 
     @classmethod
     def iters(cls, path, vectors_name, vectors_cache, batch_size=64, shuffle=True, device=0, vectors=None,
-              unk_init=torch.Tensor.zero_):
+              unk_init=torch.Tensor.zero_, shot=None, shot_group=None):
         """
         :param path: directory containing train, test, dev files
         :param vectors_name: name of word vectors file
@@ -44,7 +44,7 @@ class SogouNews(TabularDataset):
         if vectors is None:
             vectors = Vectors(name=vectors_name, cache=vectors_cache, unk_init=unk_init)
 
-        train, test = cls.splits(path)
+        train, test = cls.splits(path, shot=shot, shot_group=shot_group)
         cls.TEXT_FIELD.build_vocab(train, test, vectors=vectors)
         return BucketIterator.splits((train, test), batch_size=batch_size, repeat=False, shuffle=shuffle,
                                      sort_within_batch=True, device=device)
@@ -56,14 +56,14 @@ class SogouNewsCharQuantized(SogouNews):
 
     @classmethod
     def iters(cls, path, vectors_name, vectors_cache, batch_size=64, shuffle=True, device=0, vectors=None,
-              unk_init=torch.Tensor.zero_):
+              unk_init=torch.Tensor.zero_, shot=None, shot_group=None):
         """
         :param path: directory containing train, test, dev files
         :param batch_size: batch size
         :param device: GPU device
         :return:
         """
-        train, test = cls.splits(path)
+        train, test = cls.splits(path, shot=shot, shot_group=shot_group)
         return BucketIterator.splits((train, test), batch_size=batch_size, repeat=False, shuffle=shuffle, device=device)
 
 
