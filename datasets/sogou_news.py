@@ -24,6 +24,8 @@ class SogouNews(TabularDataset):
     @classmethod
     def splits(cls, path, train=os.path.join('.local_data', 'SogouNews',  'train.csv'),
                test=os.path.join('.local_data', 'SogouNews',  'test.csv'), **kwargs):
+        if 'shot' in kwargs and 'shot_group' in kwargs:
+            train = os.path.join('.local_data', 'SogouNews', kwargs['shot'], str(kwargs['shot_group']), 'train.csv')
         return super(SogouNews, cls).splits(
             path, train=train, test=test, format='csv', fields=[('label', cls.LABEL_FIELD), ('text', cls.TEXT_FIELD)]
         )
